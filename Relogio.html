@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Exercícios JavaScript</title>
+</head>
+<body>
+  <h2>1. Data Atual</h2>
+  <p id="data"></p>
+
+  <h2>2. Relógio</h2>
+  <p id="relogio"></p>
+
+  <h2>3. Verificar Palíndromo</h2>
+  <input type="text" id="texto" placeholder="Digite uma palavra ou frase">
+  <button onclick="verificarPalindromo()">Verificar</button>
+
+  <script>
+    function exibirDataAtual() {
+      const data = new Date();
+
+      const diasSemana = [
+        "Domingo", "Segunda-feira", "Terça-feira", 
+        "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"
+      ];
+
+      const meses = [
+        "janeiro", "fevereiro", "março", "abril", "maio", "junho",
+        "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
+      ];
+
+      let diaSemana = diasSemana[data.getDay()];
+      let dia = data.getDate();
+      let mes = meses[data.getMonth()];
+      let ano = data.getFullYear();
+
+      document.getElementById("data").innerText = 
+        `${diaSemana}, ${dia} de ${mes} de ${ano}`;
+    }
+    exibirDataAtual();
+
+
+    function atualizarRelogio() {
+      const agora = new Date();
+
+      let horas = agora.getHours().toString().padStart(2, '0');
+      let minutos = agora.getMinutes().toString().padStart(2, '0');
+      let segundos = agora.getSeconds().toString().padStart(2, '0');
+
+      document.getElementById("relogio").innerText = 
+        `${horas}:${minutos}:${segundos}`;
+
+      setTimeout(atualizarRelogio, 1000);
+    }
+    atualizarRelogio();
+
+
+    function verificarPalindromo() {
+      let texto = document.getElementById("texto").value;
+
+      let normalizado = texto.toLowerCase()
+        .replace(/[\s]/g, "")
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+      let invertido = normalizado.split("").reverse().join("");
+
+      if (normalizado === invertido && normalizado !== "") {
+        alert("É um palíndromo!");
+      } else {
+        alert("Não é um palíndromo.");
+      }
+    }
+  </script>
+</body>
+</html>
