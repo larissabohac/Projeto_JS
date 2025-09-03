@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Formulário de Cadastro</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <h2>Formulário de Cadastro</h2>
+    <form id="formCadastro" novalidate>
+        <div class="form-group">
+            <label for="nome">Nome</label>
+            <input type="text" id="nome" name="nome" required />
+            <div class="error-msg" id="erroNome"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="sobrenome">Sobrenome</label>
+            <input type="text" id="sobrenome" name="sobrenome" required />
+            <div class="error-msg" id="erroSobrenome"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required />
+            <div class="error-msg" id="erroEmail"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="dataNascimento">Data de Nascimento</label>
+            <input type="date" id="dataNascimento" name="dataNascimento" required />
+            <div class="error-msg" id="erroData"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="telefoneFixo">Telefone Fixo</label>
+            <input type="tel" id="telefoneFixo" name="telefoneFixo" placeholder="(xx)xxxx-xxxx" required
+                maxlength="13" />
+            <div class="error-msg" id="erroFixo"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="telefoneCelular">Telefone Celular</label>
+            <input type="tel" id="telefoneCelular" name="telefoneCelular" placeholder="(xx)xxxx-xxxx" required
+                maxlength="13" />
+            <div class="error-msg" id="erroCelular"></div>
+        </div>
+
+        <div class="form-group">
+            <label>Tipo</label>
+            <label class="form-check-inline"><input type="radio" name="tipo" value="professor" required
+                    id="radioProfessor" />Professor</label>
+            <label class="form-check-inline"><input type="radio" name="tipo" value="aluno"
+                    id="radioAluno" />Aluno</label>
+            <div class="error-msg" id="erroTipo"></div>
+        </div>
+
+        <div id="camposProfessor" class="hidden">
+            <div class="form-group">
+                <label for="areaAtuacao">Área de Atuação</label>
+                <input type="text" id="areaAtuacao" name="areaAtuacao" />
+                <div class="error-msg" id="erroArea"></div>
+            </div>
+            <div class="form-group">
+                <label for="matriculaProfessor">Matrícula (5 dígitos)</label>
+                <input type="text" id="matriculaProfessor" name="matriculaProfessor" maxlength="5" />
+                <div class="error-msg" id="erroMatriculaProf"></div>
+            </div>
+        </div>
+
+        <div id="camposAluno" class="hidden">
+            <div class="form-group">
+                <label for="curso">Curso</label>
+                <input type="text" id="curso" name="curso" />
+                <div class="error-msg" id="erroCurso"></div>
+            </div>
+            <div class="form-group">
+                <label for="matriculaAluno">Matrícula (10 dígitos)</label>
+                <input type="text" id="matriculaAluno" name="matriculaAluno" maxlength="10" />
+                <div class="error-msg" id="erroMatriculaAluno"></div>
+            </div>
+        </div>
+
+        <button type="submit">Enviar</button>
+        <button type="reset">Redefinir</button>
+    </form>
+
+    <h3>Dados enviados:</h3>
+    <pre id="saida"></pre>
+
+    <script>
+        
+        function Pessoa() {
+            this.nome = "";
+            this.sobrenome = "";
+            this.email = "";
+            this.dataNascimento = "";
+            this.telefoneFixo = "";
+            this.telefoneCelular = "";
+
+            this.setNome = function (n) { this.nome = n; };
+            this.getNome = function () { return this.nome; };
+
+            this.setSobrenome = function (s) { this.sobrenome = s; };
+            this.getSobrenome = function () { return this.sobrenome; };
+
+            this.setEmail = function (e) { this.email = e; };
+            this.getEmail = function () { return this.email; };
+
+            this.setDataNascimento = function (d) { this.dataNascimento = d; };
+            this.getDataNascimento = function () { return this.dataNascimento; };
+
+            this.setTelefoneFixo = function (t) { this.telefoneFixo = t; };
+            this.getTelefoneFixo = function () { return this.telefoneFixo; };
+
+            this.setTelefoneCelular = function (t) { this.telefoneCelular = t; };
+            this.getTelefoneCelular = function () { return this.telefoneCelular; };
+
+            this.nomeCompleto = function () {
+                return this.nome + " " + this.sobrenome;
+            };
+        }
+
+        function Aluno() {
+            Pessoa.call(this);
+            this.curso = "";
+            this.matricula = "";
+
+            this.setCurso = function (c) 
+            { this.curso = c; };
+
+            this.getCurso = function () 
+            { return this.curso; };
+
+            this.setMatricula = function (m) 
+            { this.matricula = m; };
+
+            this.getMatricula = function () 
+            { return this.matricula; };
+        }
+
+        function Professor() {
+            Pessoa.call(this);
+            this.areaAtuacao = "";
+            this.matricula = "";
+
+            this.setAreaAtuacao = function (a) 
+            { this.areaAtuacao = a; };
+
+            this.getAreaAtuacao = function () 
+            { return this.areaAtuacao; };
+
+            this.setMatricula = function (m) 
+            { this.matricula = m; };
+
+            this.getMatricula = function () 
+            { return this.matricula; };
+        }
+
+        
+        const radioAluno = document.getElementById('radioAluno');
+        const radioProfessor = document.getElementById('radioProfessor');
+        const camposAluno = document.getElementById('camposAluno');
+        const camposProfessor = document.getElementById('camposProfessor');
+        const form = document.getElementById('formCadastro');
+        const saida = document.getElementById('saida');
+
+        
+        function mostrarCampos() {
+            if (radioAluno.checked) {
+                camposAluno.classList.remove('hidden');
+                camposProfessor.classList.add('hidden');
+            } else if (radioProfessor.checked) {
+                camposProfessor.classList.remove('hidden');
+                camposAluno.classList.add('hidden');
+            }
+        }
+        radioAluno.addEventListener('change', mostrarCampos);
+        radioProfessor.addEventListener('change', mostrarCampos);
+
+        
+        function mascaraTelefone(input) {
+            let v = input.value.replace(/\D/g, '');
+            if (v.length > 10) v = v.slice(0, 10);
+
+            if (v.length > 6) {
+                input.value = `(${v.slice(0, 2)})${v.slice(2, 6)}-${v.slice(6)}`;
+            } else if (v.length > 2) {
+                input.value = `(${v.slice(0, 2)})${v.slice(2)}`;
+            } else if (v.length > 0) {
+                input.value = `(${v}`;
+            }
+        }
+
+        document.getElementById('telefoneFixo').addEventListener('input', (e) => mascaraTelefone(e.target));
+        document.getElementById('telefoneCelular').addEventListener('input', (e) => mascaraTelefone(e.target));
+
+        
+        function validarNome() {
+            const nome = document.getElementById('nome').value.trim();
+            const regex = /^[A-Za-zÀ-ÿ ]{3,}$/;
+            const erro = document.getElementById('erroNome');
+            if (!regex.test(nome)) {
+                erro.textContent = "Nome inválido (mínimo 3 letras, apenas letras e espaços)";
+                return false;
+            }
+            erro.textContent = "";
+            return true;
+        }
+
+        function validarSobrenome() {
+            const sobrenome = document.getElementById('sobrenome').value.trim();
+            const regex = /^[A-Za-zÀ-ÿ ]{3,}$/;
+            const erro = document.getElementById('erroSobrenome');
+            if (!regex.test(sobrenome)) {
+                erro.textContent = "Sobrenome inválido (mínimo 3 letras, apenas letras e espaços)";
+                return false;
+            }
+            erro.textContent = "";
+            return true;
+        }
+
+        function validarEmail() {
+            const email = document.getElementById('email').value.trim();
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const erro = document.getElementById('erroEmail');
+            if (!regex.test(email)) {
+                erro.textContent = "Email inválido";
+                return false;
+            }
+            erro.textContent = "";
+            return true;
+        }
+
+        function validarDataNascimento() {
+            const data = document.getElementById('dataNascimento').value;
+            const erro = document.getElementById('erroData');
+            if (!data) {
+                erro.textContent = "Data de nascimento é obrigatória";
+                return false;
+            }
+
+            
+            const partes = data.split('-');
+            if (partes.length !== 3) {
+                erro.textContent = "Data inválida";
+                return false;
+            }
+            const dia = parseInt(partes[2], 10);
+            const mes = parseInt(partes[1], 10);
+            const ano = parseInt(partes[0], 10);
+
+            if (dia < 1 || dia > 31 || mes < 1 || mes > 12 || ano < 1900 || ano > new Date().getFullYear()) {
+                erro.textContent = "Data inválida";
+                return false;
+            }
+
+            erro.textContent = "";
+            return true;
+        }
+
+        function validarTelefone(idCampo, idErro) {
+            const telefone = document.getElementById(idCampo).value.trim();
+            const erro = document.getElementById(idErro);
+            const regex = /^\(\d{2}\)\d{4}-\d{4}$/;
+            if (!regex.test(telefone)) {
+                erro.textContent = "Telefone inválido. Formato: (xx)xxxx-xxxx";
+                return false;
+            }
+            erro.textContent = "";
+            return true;
+        }
+
+        function validarTipo() {
+            const tipoSelecionado = document.querySelector('input[name="tipo"]:checked');
+            const erro = document.getElementById('erroTipo');
+            if (!tipoSelecionado) {
+                erro.textContent = "Selecione o tipo";
+                return false;
+            }
+            erro.textContent = "";
+            return true;
+        }
+
+        function validarCurso() {
+            if (!radioAluno.checked) return true; 
+            const curso = document.getElementById('curso').value.trim();
+            const erro = document.getElementById('erroCurso');
+            if (!curso) {
+                erro.textContent = "Curso obrigatório para aluno";
+                return false;
+            }
+            erro.textContent = "";
+            return true;
+        }
+
+        function validarAreaAtuacao() {
+            if (!radioProfessor.checked) return true; 
+            const area = document.getElementById('areaAtuacao').value.trim();
+            const erro = document.getElementById('erroArea');
+            if (!area) {
+                erro.textContent = "Área de atuação obrigatória para professor";
+                return false;
+            }
+            erro.textContent = "";
+            return true;
+        }
+
+        function validarMatricula() {
+            if (radioAluno.checked) {
+                const matricula = document.getElementById('matriculaAluno').value.trim();
+                const erro = document.getElementById('erroMatriculaAluno');
+                if (!/^\d{10}$/.test(matricula)) {
+                    erro.textContent = "Matrícula do aluno deve ter 10 dígitos";
+                    return false;
+                }
+                erro.textContent = "";
+                return true;
+            } else if (radioProfessor.checked) {
+                const matricula = document.getElementById('matriculaProfessor').value.trim();
+                const erro = document.getElementById('erroMatriculaProf');
+                if (!/^\d{5}$/.test(matricula)) {
+                    erro.textContent = "Matrícula do professor deve ter 5 dígitos";
+                    return false;
+                }
+                erro.textContent = "";
+                return true;
+            }
+            return false;
+        }
+
+        
+        document.getElementById('nome').addEventListener('blur', validarNome);
+        document.getElementById('sobrenome').addEventListener('blur', validarSobrenome);
+        document.getElementById('email').addEventListener('blur', validarEmail);
+        document.getElementById('dataNascimento').addEventListener('blur', validarDataNascimento);
+        document.getElementById('telefoneFixo').addEventListener('blur', () => validarTelefone('telefoneFixo', 'erroFixo'));
+        document.getElementById('telefoneCelular').addEventListener('blur', () => validarTelefone('telefoneCelular', 'erroCelular'));
+        document.getElementById('curso').addEventListener('blur', validarCurso);
+        document.getElementById('areaAtuacao').addEventListener('blur', validarAreaAtuacao);
+        document.getElementById('matriculaAluno').addEventListener('blur', validarMatricula);
+        document.getElementById('matriculaProfessor').addEventListener('blur', validarMatricula);
+
+        
+        function validarTudo() {
+            const v1 = validarNome();
+            const v2 = validarSobrenome();
+            const v3 = validarEmail();
+            const v4 = validarDataNascimento();
+            const v5 = validarTelefone('telefoneFixo', 'erroFixo');
+            const v6 = validarTelefone('telefoneCelular', 'erroCelular');
+            const v7 = validarTipo();
+            const v8 = validarCurso();
+            const v9 = validarAreaAtuacao();
+            const v10 = validarMatricula();
+
+            return v1 && v2 && v3 && v4 && v5 && v6 && v7 && v8 && v9 && v10;
+        }
+
+        
+        function preencherPadraoAluno() {
+            const alunoPadrao = new Aluno();
+            alunoPadrao.setNome("Ana");
+            alunoPadrao.setSobrenome("Silva");
+            alunoPadrao.setEmail("ana@email.com");
+            alunoPadrao.setDataNascimento("1999-09-02");
+            alunoPadrao.setTelefoneFixo("(11)1234-5678");
+            alunoPadrao.setTelefoneCelular("(99)9876-5432");
+            alunoPadrao.setCurso("ADS");
+            alunoPadrao.setMatricula("1234567890");
+
+            document.getElementById('nome').value = alunoPadrao.getNome();
+            document.getElementById('sobrenome').value = alunoPadrao.getSobrenome();
+            document.getElementById('email').value = alunoPadrao.getEmail();
+            document.getElementById('dataNascimento').value = alunoPadrao.getDataNascimento();
+            document.getElementById('telefoneFixo').value = alunoPadrao.getTelefoneFixo();
+            document.getElementById('telefoneCelular').value = alunoPadrao.getTelefoneCelular();
+            radioAluno.checked = true;
+            mostrarCampos();
+            document.getElementById('curso').value = alunoPadrao.getCurso();
+            document.getElementById('matriculaAluno').value = alunoPadrao.getMatricula();
+
+            
+            document.getElementById('areaAtuacao').value = "";
+            document.getElementById('matriculaProfessor').value = "";
+            limparErros();
+            saida.textContent = "";
+        }
+
+        
+        function preencherPadraoProfessor() {
+            const profPadrao = new Professor();
+            profPadrao.setNome("Carlos");
+            profPadrao.setSobrenome("Pereira");
+            profPadrao.setEmail("carlos@prof.com");
+            profPadrao.setDataNascimento("1980-01-15");
+            profPadrao.setTelefoneFixo("(21)2222-3333");
+            profPadrao.setTelefoneCelular("(21)9999-8888");
+            profPadrao.setAreaAtuacao("Matemática");
+            profPadrao.setMatricula("54321");
+
+            document.getElementById('nome').value = profPadrao.getNome();
+            document.getElementById('sobrenome').value = profPadrao.getSobrenome();
+            document.getElementById('email').value = profPadrao.getEmail();
+            document.getElementById('dataNascimento').value = profPadrao.getDataNascimento();
+            document.getElementById('telefoneFixo').value = profPadrao.getTelefoneFixo();
+            document.getElementById('telefoneCelular').value = profPadrao.getTelefoneCelular();
+            radioProfessor.checked = true;
+            mostrarCampos();
+            document.getElementById('areaAtuacao').value = profPadrao.getAreaAtuacao();
+            document.getElementById('matriculaProfessor').value = profPadrao.getMatricula();
+
+            
+            document.getElementById('curso').value = "";
+            document.getElementById('matriculaAluno').value = "";
+            limparErros();
+            saida.textContent = "";
+        }
+
+        function limparErros() {
+            const idsErros = [
+                'erroNome', 'erroSobrenome', 'erroEmail', 'erroData', 'erroFixo', 'erroCelular', 'erroTipo',
+                'erroCurso', 'erroArea', 'erroMatriculaAluno', 'erroMatriculaProf'
+            ];
+            idsErros.forEach(id => document.getElementById(id).textContent = "");
+        }
+
+        
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            if (!validarTudo()) {
+                saida.textContent = "Corrija os erros antes de enviar.";
+                return;
+            }
+
+            
+            let pessoaObj;
+            if (radioAluno.checked) {
+                pessoaObj = new Aluno();
+                pessoaObj.setCurso(document.getElementById('curso').value.trim());
+                pessoaObj.setMatricula(document.getElementById('matriculaAluno').value.trim());
+            } else if (radioProfessor.checked) {
+                pessoaObj = new Professor();
+                pessoaObj.setAreaAtuacao(document.getElementById('areaAtuacao').value.trim());
+                pessoaObj.setMatricula(document.getElementById('matriculaProfessor').value.trim());
+            } else {
+                saida.textContent = "Tipo não selecionado.";
+                return;
+            }
+
+            pessoaObj.setNome(document.getElementById('nome').value.trim());
+            pessoaObj.setSobrenome(document.getElementById('sobrenome').value.trim());
+            pessoaObj.setEmail(document.getElementById('email').value.trim());
+            pessoaObj.setDataNascimento(document.getElementById('dataNascimento').value);
+            pessoaObj.setTelefoneFixo(document.getElementById('telefoneFixo').value.trim());
+            pessoaObj.setTelefoneCelular(document.getElementById('telefoneCelular').value.trim());
+
+            saida.textContent = JSON.stringify(pessoaObj, null, 2);
+        });
+
+        
+        form.addEventListener('reset', function () {
+            setTimeout(() => {
+                preencherPadraoAluno();
+            }, 0);
+        });
+
+        preencherPadraoAluno();
+
+    </script>
+</body>
+
+</html>
