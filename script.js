@@ -1,70 +1,54 @@
-function exercicio1() {
-        let numero1;
-        do {
-            numero1 = prompt("Digite um número inteiro positivo:");
-            numero1 = Number(numero1);
-        } while (!Number.isInteger(numero1) || numero1 <= 0);
+function exibirDataAtual() {
+      const data = new Date();
 
-        if (numero1 % 2 === 0) {
-            alert(`O número ${numero1} é PAR.`);
-        } else {
-            alert(`O número ${numero1} é ÍMPAR.`);
-        }
+      const diasSemana = [
+        "Domingo", "Segunda-feira", "Terça-feira", 
+        "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"
+      ];
+
+      const meses = [
+        "janeiro", "fevereiro", "março", "abril", "maio", "junho",
+        "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
+      ];
+
+      let diaSemana = diasSemana[data.getDay()];
+      let dia = data.getDate();
+      let mes = meses[data.getMonth()];
+      let ano = data.getFullYear();
+
+      document.getElementById("data").innerText = 
+        `${diaSemana}, ${dia} de ${mes} de ${ano}`;
     }
+    exibirDataAtual();
 
-    function exercicio2() {
-        let numero2;
-        do {
-            numero2 = prompt("Digite um número inteiro positivo:");
-            numero2 = Number(numero2);
-        } while (!Number.isInteger(numero2) || numero2 <= 0);
 
-        let primo = true;
-        if (numero2 === 1) {
-            primo = false;
-        } else {
-            for (let i = 2; i <= Math.sqrt(numero2); i++) {
-                if (numero2 % i === 0) {
-                    primo = false;
-                    break;
-                }
-            }
-        }
+    function atualizarRelogio() {
+      const agora = new Date();
 
-        if (primo) {
-            alert(`O número ${numero2} é PRIMO.`);
-        } else {
-            alert(`O número ${numero2} NÃO é primo.`);
-        }
+      let horas = agora.getHours().toString().padStart(2, '0');
+      let minutos = agora.getMinutes().toString().padStart(2, '0');
+      let segundos = agora.getSeconds().toString().padStart(2, '0');
+
+      document.getElementById("relogio").innerText = 
+        `${horas}:${minutos}:${segundos}`;
+
+      setTimeout(atualizarRelogio, 1000);
     }
+    atualizarRelogio();
 
-    function exercicio3() {
-        let numero3;
-        do {
-            numero3 = prompt("Digite um número inteiro positivo:");
-            numero3 = Number(numero3);
-        } while (!Number.isInteger(numero3) || numero3 <= 0);
 
-        let fatorial = 1;
-        for (let i = 2; i <= numero3; i++) {
-            fatorial *= i;
-        }
+    function verificarPalindromo() {
+      let texto = document.getElementById("texto").value;
 
-        alert(`O fatorial de ${numero3} é ${fatorial}`);
-    }
+      let normalizado = texto.toLowerCase()
+        .replace(/[\s]/g, "")
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
-    function exercicio4() {
-        let dado = prompt("Digite qualquer valor:");
-        let confirmar = confirm("Deseja verificar o tipo do dado informado?");
+      let invertido = normalizado.split("").reverse().join("");
 
-        let resultado = document.getElementById("resultado");
-        if (confirmar) {
-            let tipo = typeof dado;
-            if (!isNaN(dado) && dado.trim() !== "") {
-                tipo = "number";
-            }
-            resultado.innerHTML = `<h2>O tipo do dado informado é: <strong>${tipo}</strong></h2>`;
-        } else {
-            resultado.innerHTML = `<h2>Obrigado por visitar esta página.</h2>`;
-        }
+      if (normalizado === invertido && normalizado !== "") {
+        alert("É um palíndromo!");
+      } else {
+        alert("Não é um palíndromo.");
+      }
     }
