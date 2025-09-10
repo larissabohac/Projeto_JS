@@ -1,54 +1,62 @@
-function exibirDataAtual() {
-      const data = new Date();
+let playlist = [];
 
-      const diasSemana = [
-        "Domingo", "Segunda-feira", "Terça-feira", 
-        "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"
-      ];
+function renderPlaylist(filteredList = playlist) {
+  const ul = document.getElementById("playlist");
+  ul.innerHTML = "";
 
-      const meses = [
-        "janeiro", "fevereiro", "março", "abril", "maio", "junho",
-        "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
-      ];
+  for (let [index, music] of filteredList.entries()) {
+    const li = document.createElement("li");
+    li.className = "list-group-item playlist-item";
 
-      let diaSemana = diasSemana[data.getDay()];
-      let dia = data.getDate();
-      let mes = meses[data.getMonth()];
-      let ano = data.getFullYear();
+    li.innerHTML = `
+      <span>${music}</span>
+      <div>
+        <button onclick="editMusic(${index})" class="btn btn-sm btn-secondary me-2">Editar</button>
+        <button onclick="deleteMusic(${index})" class="btn btn-sm btn-danger">Excluir</button>
+      </div>
+    `;
 
-      document.getElementById("data").innerText = 
-        `${diaSemana}, ${dia} de ${mes} de ${ano}`;
-    }
-    exibirDataAtual();
+    ul.appendChild(li);
+  }
+}
 
+function addMusic() {
+  const input = document.getElementById("musicInput");
+  const musicName = input.value.trim();
 
-    function atualizarRelogio() {
-      const agora = new Date();
+  if (musicName) {
+    playlist.push(musicName); 
+    input.value = "";
+    renderPlaylist();
+  }
+}
 
-      let horas = agora.getHours().toString().padStart(2, '0');
-      let minutos = agora.getMinutes().toString().padStart(2, '0');
-      let segundos = agora.getSeconds().toString().padStart(2, '0');
+function removeLast() {
+  playlist.pop(); 
+  renderPlaylist();
+}
 
-      document.getElementById("relogio").innerText = 
-        `${horas}:${minutos}:${segundos}`;
+function sortPlaylist() {
+  playlist.sort(); 
+  renderPlaylist();
+}
 
-      setTimeout(atualizarRelogio, 1000);
-    }
-    atualizarRelogio();
+function deleteMusic(index) {
+  playlist.splice(index, 1);
+  renderPlaylist();
+}
 
+function editMusic(index) {
+  const newName = prompt("Editar nome da música:", playlist[index]);
+  if (newName !== null && newName.trim() !== "") {
+    playlist[index] = newName.trim();
+    renderPlaylist();
+  }
+}
 
-    function verificarPalindromo() {
-      let texto = document.getElementById("texto").value;
+function searchMusic() {
+  const query = document.getElementById("searchInput").value.toLowerCase();
 
-      let normalizado = texto.toLowerCase()
-        .replace(/[\s]/g, "")
-        .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-
-      let invertido = normalizado.split("").reverse().join("");
-
-      if (normalizado === invertido && normalizado !== "") {
-        alert("É um palíndromo!");
-      } else {
-        alert("Não é um palíndromo.");
-      }
-    }
+  const filtered = playlist.filter(music => music.toLowerCase().includes(query)); 
+  renderPlaylist(filtered);
+}
