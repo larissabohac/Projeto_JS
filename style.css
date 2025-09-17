@@ -1,70 +1,12 @@
 body {
-    background-color: #ffe6f0;
-    height: 100vh;
+    background: #ef83dd;
+  }
+  .playlist-item {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
   }
-
-  .calculadora {
-    background-color: #ffcce0;
-    border-radius: 20px;
-    padding: 20px;
-    box-shadow: 0px 0px 15px rgba(0,0,0,0.1);
-    width: 280px;
-  }
-
-  .display {
-    font-size: 28px;
-    text-align: right;
-    margin-bottom: 25px;
-    height: 60px;
-    padding: 10px;
-    border-radius: 10px;
-    border: 2px solid #ff99cc;
-    background-color: white;
-  }
-
-  .btn {
-    font-size: 20px;
-    padding: 16px 0;
-    border-radius: 50px;
-  }
-
-  .btn-operador {
-    background-color: #ff80aa;
-    color: white;
-  }
-
-  .btn-operador:hover {
-    background-color: #e06699;
-  }
-
-  .btn-clear {
-    background-color: #ff9999;
-    color: white;
-  }
-
-  .btn-clear:hover {
-    background-color: #ff6666;
-  }
-
-  .btn-igual {
-    background-color: #66cc99;
-    color: white;
-  }
-
-  .btn-igual:hover {
-    background-color: #55aa88;
-  }
-
-  h2 {
-    text-align: center;
-    color: #cc3366;
-    margin-bottom: 20px;
-  }
-
-  .row > .col-3,
-  .row > .col-6 {
-    padding: 5px;
+  .playlist-item input {
+    width: 100%;
+    margin-right: 10px;
   }
